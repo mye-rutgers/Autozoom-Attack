@@ -48,7 +48,6 @@ def main(args):
         # elif args['dataset'] == "imagenet_np":
             
 
-
         if len(data.test_labels) < args["num_img"]:
             raise Exception("No enough data, only have {} but need {}".format(len(data.test_labels), args["num_img"]))
 

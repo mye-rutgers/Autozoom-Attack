@@ -192,6 +192,18 @@ class InceptionModelPrediction:
             sess.graph.as_graph_def(),
             input_map={'input:0': self.img},
             return_elements=[output_name])
+    #self.softmax_tensor = sess.graph.get_tensor_by_name(output_name)
+    print('Hi')
+    #for op in sess.graph.get_operations():
+    #    print(op.values())
+    #print(sess.graph.get_tensor_by_name('InceptionV3/InceptionV3/Conv2d_1a_3x3/convolution:0'))
+    #self.con_tensor = sess.graph.get_tensor_by_name('InceptionV3/InceptionV3/Conv2d_1a_3x3/convolution:0')
+    intermediate_name = 'InceptionV3/InceptionV3/Conv2d_1a_3x3/convolution:0'
+    self.intermediate_tensor = tf.import_graph_def(
+            sess.graph.as_graph_def(),
+            input_map={'input:0': self.img},
+            return_elements=[intermediate_name])
+    print('Hello')
   def predict(self, dat):
     dat = np.squeeze(dat)
     # scaled = (0.5 + dat) * 255
@@ -200,7 +212,7 @@ class InceptionModelPrediction:
     else:
       scaled = dat
     # print(scaled.shape)
-    predictions = self.sess.run(self.softmax_tensor,
+    [intermediate_results,predictions] = self.sess.run([self.intermediate_tensor,self.softmax_tensor],
                          {self.img: scaled})
     predictions = np.squeeze(predictions)
     return predictions
